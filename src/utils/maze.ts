@@ -1,41 +1,43 @@
+import { BOARD } from "../constants";
+import { Node } from "../types";
+
 export const recursiveDivisionMaze = (
-  board,
-  rowStart,
-  rowEnd,
-  colStart,
-  colEnd,
-  orientation,
-  surroundingWalls,
-  type
-) => {
+  board: Node[][],
+  rowStart: number,
+  rowEnd: number,
+  colStart: number,
+  colEnd: number,
+  orientation: "horizontal" | "vertical",
+  surroundingWalls: boolean,
+  type: "wall"
+): Node[][] | null => {
   if (rowEnd < rowStart || colEnd < colStart) {
-    return;
+    return null;
   }
   if (!surroundingWalls) {
-    let relevantIds = [board.start, board.target];
-    if (board.object) relevantIds.push(board.object);
-    Object.keys(board.nodes).forEach((node) => {
-      if (!relevantIds.includes(node)) {
-        let r = parseInt(node.split("-")[0]);
-        let c = parseInt(node.split("-")[1]);
-        if (
-          r === 0 ||
-          c === 0 ||
-          r === board.height - 1 ||
-          c === board.width - 1
-        ) {
-          let currentHTMLNode = document.getElementById(node);
-          board.wallsToAnimate.push(currentHTMLNode);
-          if (type === "wall") {
-            board.nodes[node].status = "wall";
-            board.nodes[node].weight = 0;
-          } else if (type === "weight") {
-            board.nodes[node].status = "unvisited";
-            board.nodes[node].weight = 15;
+    const start = `${BOARD.DEFAULT_START_NODE_ROW}-${BOARD.DEFAULT_FINISH_NODE_COL}`;
+    const target = `${BOARD.DEFAULT_FINISH_NODE_ROW}-${BOARD.DEFAULT_FINISH_NODE_COL}`;
+    let relevantIds = [start, target];
+    for (const row of board) {
+      for (const node of row) {
+        const currentId = `${node.row}-${node.col}`;
+        if (!relevantIds.includes(currentId)) {
+          let r = node.row;
+          let c = node.col;
+          if (
+            r === 0 ||
+            c === 0 ||
+            r === board.length - 1 ||
+            c === board[0].length - 1
+          ) {
+            if (type === "wall") {
+              node.isWall = true;
+            }
           }
         }
       }
-    });
+    }
+
     surroundingWalls = true;
   }
   if (orientation === "horizontal") {
@@ -51,32 +53,24 @@ export const recursiveDivisionMaze = (
     let randomColIndex = Math.floor(Math.random() * possibleCols.length);
     let currentRow = possibleRows[randomRowIndex];
     let colRandom = possibleCols[randomColIndex];
-    Object.keys(board.nodes).forEach((node) => {
-      let r = parseInt(node.split("-")[0]);
-      let c = parseInt(node.split("-")[1]);
-      if (
-        r === currentRow &&
-        c !== colRandom &&
-        c >= colStart - 1 &&
-        c <= colEnd + 1
-      ) {
-        let currentHTMLNode = document.getElementById(node);
+    for (const row of board) {
+      for (const node of row) {
+        let r = node.row;
+        let c = node.col;
         if (
-          currentHTMLNode.className !== "start" &&
-          currentHTMLNode.className !== "target" &&
-          currentHTMLNode.className !== "object"
+          r === currentRow &&
+          c !== colRandom &&
+          c >= colStart - 1 &&
+          c <= colEnd + 1
         ) {
-          board.wallsToAnimate.push(currentHTMLNode);
-          if (type === "wall") {
-            board.nodes[node].status = "wall";
-            board.nodes[node].weight = 0;
-          } else if (type === "weight") {
-            board.nodes[node].status = "unvisited";
-            board.nodes[node].weight = 15;
+          if (!node.isStart && !node.isFinish) {
+            if (type === "wall") {
+              node.isWall = true;
+            }
           }
         }
       }
-    });
+    }
     if (currentRow - 2 - rowStart > colEnd - colStart) {
       recursiveDivisionMaze(
         board,
@@ -136,32 +130,24 @@ export const recursiveDivisionMaze = (
     let randomRowIndex = Math.floor(Math.random() * possibleRows.length);
     let currentCol = possibleCols[randomColIndex];
     let rowRandom = possibleRows[randomRowIndex];
-    Object.keys(board.nodes).forEach((node) => {
-      let r = parseInt(node.split("-")[0]);
-      let c = parseInt(node.split("-")[1]);
-      if (
-        c === currentCol &&
-        r !== rowRandom &&
-        r >= rowStart - 1 &&
-        r <= rowEnd + 1
-      ) {
-        let currentHTMLNode = document.getElementById(node);
+    for (const row of board) {
+      for (const node of row) {
+        let r = node.row;
+        let c = node.col;
         if (
-          currentHTMLNode.className !== "start" &&
-          currentHTMLNode.className !== "target" &&
-          currentHTMLNode.className !== "object"
+          c === currentCol &&
+          r !== rowRandom &&
+          r >= rowStart - 1 &&
+          r <= rowEnd + 1
         ) {
-          board.wallsToAnimate.push(currentHTMLNode);
-          if (type === "wall") {
-            board.nodes[node].status = "wall";
-            board.nodes[node].weight = 0;
-          } else if (type === "weight") {
-            board.nodes[node].status = "unvisited";
-            board.nodes[node].weight = 15;
+          if (!node.isStart && !node.isFinish) {
+            if (type === "wall") {
+              node.isWall = true;
+            }
           }
         }
       }
-    });
+    }
     if (rowEnd - rowStart > currentCol - 2 - colStart) {
       recursiveDivisionMaze(
         board,
@@ -209,4 +195,5 @@ export const recursiveDivisionMaze = (
       );
     }
   }
+  return board;
 };

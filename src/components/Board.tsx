@@ -1,7 +1,3 @@
-import { useCallback, useEffect, useState } from "react";
-
-import { CHECKPOINT_STATUS } from "../constants";
-
 import Square from "./Square";
 import { Node } from "../types";
 

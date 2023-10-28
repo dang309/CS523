@@ -1,13 +1,21 @@
-import { Icon } from "@iconify/react";
+import { FormEvent } from "react";
 
 type Props = {
+  selectedAlgorithm: string;
+  handleChangeAlgorithm: (_: FormEvent<HTMLSelectElement>) => void;
   startAlgorithmAction: () => void;
+  generateRecursiveDivisionMaze: () => void;
 };
 
 const Algorithms = (props: Props) => {
-  const { startAlgorithmAction } = props;
+  const {
+    selectedAlgorithm,
+    handleChangeAlgorithm,
+    startAlgorithmAction,
+    generateRecursiveDivisionMaze,
+  } = props;
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex flex-wrap items-start gap-2 ">
       {/* <button */}
       {/*   type="button" */}
       {/*   className={clsx( */}
@@ -74,17 +82,28 @@ const Algorithms = (props: Props) => {
       {/*   /> */}
       {/* </button> */}
 
-      {/* <select */}
-      {/*   id="algorithms" */}
-      {/*   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" */}
-      {/* > */}
-      {/*   <option selected disabled> */}
-      {/*     Choose a algorithm */}
-      {/*   </option> */}
-      {/*   <option value="dijkstra">Dijkstra</option> */}
-      {/*   <option value="bfs">Breath-first Search</option> */}
-      {/*   <option value="dfs">Depth-first Search</option> */}
-      {/* </select> */}
+      <button
+        type="button"
+        className="p-2 flex items-center gap-1 text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+        onClick={generateRecursiveDivisionMaze}
+      >
+        Generate random maze
+      </button>
+
+      <select
+        id="algorithms"
+        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        style={{ width: "256px" }}
+        value={selectedAlgorithm}
+        onChange={handleChangeAlgorithm}
+      >
+        <option selected disabled>
+          Choose a algorithm
+        </option>
+        <option value="dijkstra">Dijkstra</option>
+        <option value="bfs">Breath-first Search</option>
+        <option value="dfs">Depth-first Search</option>
+      </select>
 
       <button
         type="button"

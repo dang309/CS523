@@ -1,18 +1,22 @@
-import { useCallback, useEffect, useState } from "react";
+import { FormEvent, useCallback, useEffect, useState } from "react";
 
 import Board from "./components/Board";
+
+import { Icon } from "@iconify/react";
 
 import { ALGORITHM_ACTION_STATUS, BOARD, CHECKPOINT_STATUS } from "./constants";
 import Manipulator from "./components/Manipulator";
 import { Node } from "./types";
-import { createNode } from "./utils";
+import { createNode } from "./utils/common";
 import Algorithms from "./components/Algorithms";
 import { dijkstra, getNodesInShortestPathOrder } from "./algorithms/dijkstra";
+import { recursiveDivisionMaze } from "./utils/maze";
 
 const App = () => {
   const [rows, setRows] = useState(BOARD.INITIAL_ROWS);
   const [cols, setCols] = useState(BOARD.INITIAL_COLS);
   const [board, setBoard] = useState<Node[][]>([]);
+  const [selectAlgorithm, setSelectAlgorithm] = useState<string>("dijkstra");
   const [flagStatus, setFlagStatus] = useState<CHECKPOINT_STATUS>(
     CHECKPOINT_STATUS.TURN_OFF
   );
@@ -56,6 +60,10 @@ const App = () => {
     initializeGrid(rows, cols);
   };
 
+  const handleChangeAlgorithm = (e: FormEvent<HTMLSelectElement>) => {
+    setSelectAlgorithm(e.currentTarget.value);
+  };
+
   const animateShortestPath = (nodesInShortestPathOrder: Node[]) => {
     for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
       setTimeout(() => {
@@ -82,9 +90,20 @@ const App = () => {
       setTimeout(() => {
         const node = visitedNodesInOrder[i];
         const el = document.getElementById(`${node.row}-${node.col}`);
-        console.log({ el });
         if (el) {
           el.classList.add("node-visited");
+        }
+      }, 10 * i);
+    }
+  };
+
+  const animateWalls = (walls: Node[]) => {
+    for (let i = 0; i < walls.length; i++) {
+      setTimeout(() => {
+        const node = walls[i];
+        const el = document.getElementById(`${node.row}-${node.col}`);
+        if (el) {
+          el.classList.add("node-wall");
         }
       }, 10 * i);
     }
@@ -110,6 +129,7 @@ const App = () => {
   };
 
   const startAlgorithmAction = async () => {
+    if (!selectAlgorithm) return;
     visualizeDijkstra();
     // if (algorithmActionStatus === ALGORITHM_ACTION_STATUS.IDLE) {
     //   setAlgorithmActionStatus(ALGORITHM_ACTION_STATUS.RUNNING);
@@ -118,6 +138,31 @@ const App = () => {
     //   setAlgorithmActionStatus(ALGORITHM_ACTION_STATUS.IDLE);
     //   clearBoard();
     // }
+  };
+
+  const generateRecursiveDivisionMaze = () => {
+    const newBoard = recursiveDivisionMaze(
+      board,
+      2,
+      board.length - 3,
+      2,
+      board[0].length - 3,
+      "horizontal",
+      false,
+      "wall"
+    );
+
+    if (newBoard) {
+      const walls = [];
+      for (const row of newBoard) {
+        for (const node of row) {
+          if (node.isWall) {
+            walls.push(node);
+          }
+        }
+      }
+      animateWalls(walls);
+    }
   };
 
   useEffect(() => {
@@ -141,54 +186,46 @@ const App = () => {
           <a href="/">LOGO</a>
         </div>
       </header>
-      <div className="mt-4 mb-2 flex justify-between">
+      <div className="mt-4 mb-2 flex justify-between items-start">
         <Manipulator
           board={board}
+          rows={rows}
+          cols={cols}
+          setGridSize={setGridSize}
           setBoard={setBoard}
           initializeGrid={initializeGrid}
           setRows={setRows}
           setCols={setCols}
         />
 
-        <Algorithms startAlgorithmAction={startAlgorithmAction} />
+        <Algorithms
+          selectedAlgorithm={selectAlgorithm}
+          handleChangeAlgorithm={handleChangeAlgorithm}
+          startAlgorithmAction={startAlgorithmAction}
+          generateRecursiveDivisionMaze={generateRecursiveDivisionMaze}
+        />
       </div>
 
-      <div className="mb-4 flex items-center justify-center gap-4">
-        <div>
-          <label
-            htmlFor="rows"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >
-            Number of Rows
-          </label>
-
-          <input
-            type="text"
-            id="rows"
-            className="w-16 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Enter number of rows"
-            value={rows}
-            onChange={(e) => setRows(parseInt(e.target.value, 10))}
-            onBlur={setGridSize}
+      <div className="flex justify-center gap-2 mb-4">
+        <div className="flex items-center gap-2  border rounded p-1">
+          <div
+            style={{
+              width: "24px",
+              height: "24px",
+              backgroundColor: "rgb(12, 53, 71)",
+            }}
           />
+          <span>Wall</span>
         </div>
 
-        <div>
-          <label
-            htmlFor="columns"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >
-            Number of Columns
-          </label>
-          <input
-            type="text"
-            id="columns"
-            className="w-16 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Enter number of columns"
-            value={cols}
-            onChange={(e) => setCols(parseInt(e.target.value, 10))}
-            onBlur={setGridSize}
-          />
+        <div className="flex items-center gap-2  border rounded p-1">
+          <Icon icon="material-symbols:flag" style={{ fontSize: "24px" }} />
+          <span>Start</span>
+        </div>
+
+        <div className="flex items-center gap-2 border rounded p-1">
+          <Icon icon="material-symbols:target" style={{ fontSize: "24px" }} />
+          <span>Target</span>
         </div>
       </div>
 

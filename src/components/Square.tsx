@@ -23,8 +23,18 @@ const Square = (props: Props) => {
 
   return (
     <td id={`${row}-${col}`} className={clsx("node", extraClass)}>
-      {isStart && <Icon icon="material-symbols:flag" />}
-      {isFinish && <Icon icon="material-symbols:target" />}
+      {isStart && (
+        <Icon
+          icon="material-symbols:flag"
+          style={{ color: "white", fontSize: "24px" }}
+        />
+      )}
+      {isFinish && (
+        <Icon
+          icon="material-symbols:target"
+          style={{ color: "white", fontSize: "24px" }}
+        />
+      )}
     </td>
   );
 };
