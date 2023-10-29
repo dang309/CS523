@@ -17,13 +17,13 @@ export const recursiveDivisionMaze = (
   if (!surroundingWalls) {
     const start = `${BOARD.DEFAULT_START_NODE_ROW}-${BOARD.DEFAULT_FINISH_NODE_COL}`;
     const target = `${BOARD.DEFAULT_FINISH_NODE_ROW}-${BOARD.DEFAULT_FINISH_NODE_COL}`;
-    let relevantIds = [start, target];
+    const relevantIds = [start, target];
     for (const row of board) {
       for (const node of row) {
         const currentId = `${node.row}-${node.col}`;
         if (!relevantIds.includes(currentId)) {
-          let r = node.row;
-          let c = node.col;
+          const r = node.row;
+          const c = node.col;
           if (
             r === 0 ||
             c === 0 ||
@@ -41,22 +41,22 @@ export const recursiveDivisionMaze = (
     surroundingWalls = true;
   }
   if (orientation === "horizontal") {
-    let possibleRows = [];
+    const possibleRows = [];
     for (let number = rowStart; number <= rowEnd; number += 2) {
       possibleRows.push(number);
     }
-    let possibleCols = [];
+    const possibleCols = [];
     for (let number = colStart - 1; number <= colEnd + 1; number += 2) {
       possibleCols.push(number);
     }
-    let randomRowIndex = Math.floor(Math.random() * possibleRows.length);
-    let randomColIndex = Math.floor(Math.random() * possibleCols.length);
-    let currentRow = possibleRows[randomRowIndex];
-    let colRandom = possibleCols[randomColIndex];
+    const randomRowIndex = Math.floor(Math.random() * possibleRows.length);
+    const randomColIndex = Math.floor(Math.random() * possibleCols.length);
+    const currentRow = possibleRows[randomRowIndex];
+    const colRandom = possibleCols[randomColIndex];
     for (const row of board) {
       for (const node of row) {
-        let r = node.row;
-        let c = node.col;
+        const r = node.row;
+        const c = node.col;
         if (
           r === currentRow &&
           c !== colRandom &&
@@ -118,22 +118,22 @@ export const recursiveDivisionMaze = (
       );
     }
   } else {
-    let possibleCols = [];
+    const possibleCols = [];
     for (let number = colStart; number <= colEnd; number += 2) {
       possibleCols.push(number);
     }
-    let possibleRows = [];
+    const possibleRows = [];
     for (let number = rowStart - 1; number <= rowEnd + 1; number += 2) {
       possibleRows.push(number);
     }
-    let randomColIndex = Math.floor(Math.random() * possibleCols.length);
-    let randomRowIndex = Math.floor(Math.random() * possibleRows.length);
-    let currentCol = possibleCols[randomColIndex];
-    let rowRandom = possibleRows[randomRowIndex];
+    const randomColIndex = Math.floor(Math.random() * possibleCols.length);
+    const randomRowIndex = Math.floor(Math.random() * possibleRows.length);
+    const currentCol = possibleCols[randomColIndex];
+    const rowRandom = possibleRows[randomRowIndex];
     for (const row of board) {
       for (const node of row) {
-        let r = node.row;
-        let c = node.col;
+        const r = node.row;
+        const c = node.col;
         if (
           c === currentCol &&
           r !== rowRandom &&
