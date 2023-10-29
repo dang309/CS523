@@ -4,6 +4,7 @@ import "../styles/node.css";
 
 import { Icon } from "@iconify/react";
 import { Node as Square } from "../types";
+import { Stack } from "@mui/material";
 
 type Props = {
   node: Square;
@@ -23,18 +24,11 @@ const Square = (props: Props) => {
 
   return (
     <td id={`${row}-${col}`} className={clsx("node", extraClass)}>
-      {isStart && (
-        <Icon
-          icon="material-symbols:flag"
-          style={{ color: "white", fontSize: "24px" }}
-        />
-      )}
-      {isFinish && (
-        <Icon
-          icon="material-symbols:target"
-          style={{ color: "white", fontSize: "24px" }}
-        />
-      )}
+      <Stack alignItems="center" justifyContent="center">
+        {isStart && <Icon icon="noto:mouse-face" />}
+        {isFinish && <Icon icon="emojione:cheese-wedge" />}
+        {isWall && <Icon icon="ph:wall" style={{ color: "white" }} />}
+      </Stack>
     </td>
   );
 };

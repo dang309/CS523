@@ -7,14 +7,6 @@
   border: 2px dashed rgb(175, 216, 248);
 }
 
-.node-finish {
-  background-color: #cd1818;
-}
-
-.node-start {
-  background-color: #005b41;
-}
-
 .node-visited {
   animation-name: visitedAnimation;
   animation-duration: 1.5s;

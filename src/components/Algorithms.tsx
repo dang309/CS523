@@ -1,8 +1,20 @@
 import { FormEvent } from "react";
+import { ALGORITHM_ACTION_STATUS } from "../constants";
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  Stack,
+} from "@mui/material";
 
 type Props = {
   selectedAlgorithm: string;
-  handleChangeAlgorithm: (_: FormEvent<HTMLSelectElement>) => void;
+  algorithmActionStatus: ALGORITHM_ACTION_STATUS;
+  handleChangeAlgorithm: (_: SelectChangeEvent<string>) => void;
   startAlgorithmAction: () => void;
   generateRecursiveDivisionMaze: () => void;
 };
@@ -10,12 +22,13 @@ type Props = {
 const Algorithms = (props: Props) => {
   const {
     selectedAlgorithm,
+    algorithmActionStatus,
     handleChangeAlgorithm,
     startAlgorithmAction,
     generateRecursiveDivisionMaze,
   } = props;
   return (
-    <div className="flex flex-wrap items-start gap-2 ">
+    <Stack spacing={2} alignItems="flex-start">
       {/* <button */}
       {/*   type="button" */}
       {/*   className={clsx( */}
@@ -82,43 +95,42 @@ const Algorithms = (props: Props) => {
       {/*   /> */}
       {/* </button> */}
 
-      <button
-        type="button"
-        className="p-2 flex items-center gap-1 text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+      <Button
+        variant="outlined"
+        size="small"
         onClick={generateRecursiveDivisionMaze}
       >
         Generate random maze
-      </button>
+      </Button>
 
-      <select
-        id="algorithms"
-        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        style={{ width: "256px" }}
-        value={selectedAlgorithm}
-        onChange={handleChangeAlgorithm}
-      >
-        <option selected disabled>
-          Choose a algorithm
-        </option>
-        <option value="dijkstra">Dijkstra</option>
-        <option value="bfs">Breath-first Search</option>
-        <option value="dfs">Depth-first Search</option>
-      </select>
+      <Box>
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Algorithms</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={selectedAlgorithm}
+            label="Age"
+            onChange={handleChangeAlgorithm}
+          >
+            <MenuItem selected disabled>
+              Choose a algorithm
+            </MenuItem>
+            <MenuItem value="dijkstra">Dijkstra</MenuItem>
+            <MenuItem value="bfs">Breath-first Search</MenuItem>
+            <MenuItem value="dfs">Depth-first Search</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
 
-      <button
-        type="button"
-        className="p-2 flex items-center gap-1 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+      <Button
+      variant="contained"
+        disabled={algorithmActionStatus === ALGORITHM_ACTION_STATUS.RUNNING}
         onClick={startAlgorithmAction}
       >
-        {/* <Icon icon="material-symbols:play-arrow" /> */}
-        {/* {algorithmActionStatus === ALGORITHM_ACTION_STATUS.IDLE */}
-        {/*   ? "Run" */}
-        {/*   : algorithmActionStatus === ALGORITHM_ACTION_STATUS.RUNNING */}
-        {/*   ? "Terminate" */}
-        {/*   : "Run again"} */}
         Run
-      </button>
-    </div>
+      </Button>
+    </Stack>
   );
 };
 

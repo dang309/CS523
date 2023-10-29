@@ -1,3 +1,4 @@
+import { Button, ButtonGroup, Tooltip } from "@mui/material";
 import { BOARD } from "../constants";
 import { Node } from "../types";
 import { createNode } from "../utils/common";
@@ -71,22 +72,54 @@ const Manipulator = (props: Props) => {
   const leftButtons = [
     {
       id: 1,
-      label: "Add one row",
-      icon: "material-symbols:add",
+      label: "Add after row",
+      icon: "mdi:table-row-add-after",
       action: () => {
         addOneRow();
       },
     },
     {
       id: 2,
-      label: "Add one column",
-      icon: "material-symbols:add",
+      label: "Add before row",
+      icon: "mdi:table-row-add-before",
+      action: () => {
+        addOneRow();
+      },
+    },
+    {
+      id: 3,
+      label: "Add before column",
+      icon: "mdi:table-column-add-before",
       action: () => {
         addOneColumn();
       },
     },
     {
-      id: 3,
+      id: 4,
+      label: "Add after column",
+      icon: "mdi:table-column-add-after",
+      action: () => {
+        addOneColumn();
+      },
+    },
+    {
+      id: 5,
+      label: "Delete column",
+      icon: "fluent:table-delete-column-16-regular",
+      action: () => {
+        addOneColumn();
+      },
+    },
+    {
+      id: 6,
+      label: "Delete row",
+      icon: "fluent:table-delete-row-16-regular",
+      action: () => {
+        addOneColumn();
+      },
+    },
+    {
+      id: 7,
       label: "Transform",
       icon: "material-symbols:rotate-90-degrees-cw-outline-rounded",
       action: () => {
@@ -94,7 +127,7 @@ const Manipulator = (props: Props) => {
       },
     },
     {
-      id: 4,
+      id: 8,
       label: "Reset",
       icon: "material-symbols:refresh",
       action: () => {
@@ -103,63 +136,22 @@ const Manipulator = (props: Props) => {
     },
   ];
   return (
-    <div>
-      <div className="flex items-start gap-2">
-        {leftButtons &&
-          leftButtons.map((button) => {
-            return (
-              <button
-                key={button.id}
+    <ButtonGroup size="large">
+      {leftButtons &&
+        leftButtons.map((button) => {
+          return (
+            <Tooltip key={button.id} title={button.label}>
+              <Button
                 type="button"
                 className="p-2 flex items-center gap-1 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
                 onClick={button.action}
               >
                 <Icon icon={button.icon} />
-                {button.label}
-              </button>
-            );
-          })}
-      </div>
-
-      <div className="mb-4 flex items-center justify-center gap-4">
-        <div>
-          <label
-            htmlFor="rows"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >
-            Number of Rows
-          </label>
-
-          <input
-            type="text"
-            id="rows"
-            className="w-16 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Enter number of rows"
-            value={rows}
-            onChange={(e) => setRows(parseInt(e.target.value, 10))}
-            onBlur={setGridSize}
-          />
-        </div>
-
-        <div>
-          <label
-            htmlFor="columns"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >
-            Number of Columns
-          </label>
-          <input
-            type="text"
-            id="columns"
-            className="w-16 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Enter number of columns"
-            value={cols}
-            onChange={(e) => setCols(parseInt(e.target.value, 10))}
-            onBlur={setGridSize}
-          />
-        </div>
-      </div>
-    </div>
+              </Button>
+            </Tooltip>
+          );
+        })}
+    </ButtonGroup>
   );
 };
 

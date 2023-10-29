@@ -42,24 +42,20 @@ const Board = (props: Props) => {
   // };
 
   return (
-    <div className="flex-1 flex justify-center pb-8 ">
-      <div>
-        <table>
-          <tbody>
-            {board &&
-              board.map((row, rowIndex) => {
-                return (
-                  <tr key={rowIndex} id={rowIndex.toString()}>
-                    {row.map((node) => {
-                      return <Square key={node.id} node={node} />;
-                    })}
-                  </tr>
-                );
-              })}
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <table>
+      <tbody>
+        {board &&
+          board.map((row, rowIndex) => {
+            return (
+              <tr key={rowIndex} id={rowIndex.toString()}>
+                {row.map((node) => {
+                  return <Square key={node.id} node={node} />;
+                })}
+              </tr>
+            );
+          })}
+      </tbody>
+    </table>
   );
 };
 
