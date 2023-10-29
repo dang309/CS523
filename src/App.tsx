@@ -73,7 +73,7 @@ const App = () => {
       if (i === visitedNodesInOrder.length) {
         setTimeout(() => {
           animateShortestPath(nodesInShortestPathOrder);
-        }, 10 * i);
+        }, 50 * i);
         return;
       }
       setTimeout(() => {
@@ -82,7 +82,7 @@ const App = () => {
         if (el) {
           el.classList.add("node-visited");
         }
-      }, 10 * i);
+      }, 50 * i);
     }
   };
 
