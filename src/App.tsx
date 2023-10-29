@@ -4,7 +4,7 @@ import Board from "./components/Board";
 
 import { Icon } from "@iconify/react";
 
-import { ALGORITHM_ACTION_STATUS, BOARD, CHECKPOINT_STATUS } from "./constants";
+import { BOARD } from "./constants";
 import Manipulator from "./components/Manipulator";
 import { Node } from "./types";
 import { createNode } from "./utils/common";
@@ -17,28 +17,28 @@ const App = () => {
   const [cols, setCols] = useState(BOARD.INITIAL_COLS);
   const [board, setBoard] = useState<Node[][]>([]);
   const [selectAlgorithm, setSelectAlgorithm] = useState<string>("dijkstra");
-  const [flagStatus, setFlagStatus] = useState<CHECKPOINT_STATUS>(
-    CHECKPOINT_STATUS.TURN_OFF
-  );
-  const [targetStatus, setTargetStatus] = useState<CHECKPOINT_STATUS>(
-    CHECKPOINT_STATUS.TURN_OFF
-  );
-  const [algorithmActionStatus, setAlgorithmActionStatus] =
-    useState<ALGORITHM_ACTION_STATUS>(ALGORITHM_ACTION_STATUS.IDLE);
-  const [selectedStarting, setSelectedStarting] = useState<{
-    row: number;
-    col: number;
-  }>({
-    row: BOARD.DEFAULT_START_NODE_ROW,
-    col: BOARD.DEFAULT_START_NODE_COL,
-  });
-  const [selectedTarget, setSelectedTarget] = useState<{
-    row: number;
-    col: number;
-  }>({
-    row: BOARD.DEFAULT_FINISH_NODE_ROW,
-    col: BOARD.DEFAULT_FINISH_NODE_COL,
-  });
+  // const [flagStatus, setFlagStatus] = useState<CHECKPOINT_STATUS>(
+  //   CHECKPOINT_STATUS.TURN_OFF
+  // );
+  // const [targetStatus, setTargetStatus] = useState<CHECKPOINT_STATUS>(
+  //   CHECKPOINT_STATUS.TURN_OFF
+  // );
+  // const [algorithmActionStatus, setAlgorithmActionStatus] =
+  //   useState<ALGORITHM_ACTION_STATUS>(ALGORITHM_ACTION_STATUS.IDLE);
+  // const [selectedStarting, setSelectedStarting] = useState<{
+  //   row: number;
+  //   col: number;
+  // }>({
+  //   row: BOARD.DEFAULT_START_NODE_ROW,
+  //   col: BOARD.DEFAULT_START_NODE_COL,
+  // });
+  // const [selectedTarget, setSelectedTarget] = useState<{
+  //   row: number;
+  //   col: number;
+  // }>({
+  //   row: BOARD.DEFAULT_FINISH_NODE_ROW,
+  //   col: BOARD.DEFAULT_FINISH_NODE_COL,
+  // });
 
   const initializeGrid = useCallback(
     (rows = BOARD.INITIAL_ROWS, cols = BOARD.INITIAL_COLS) => {
@@ -110,13 +110,13 @@ const App = () => {
   };
 
   const visualizeDijkstra = () => {
-    if (
-      selectedStarting.row === -1 ||
-      selectedStarting.col === -1 ||
-      selectedTarget.row === -1 ||
-      selectedTarget.col === -1
-    )
-      return;
+    // if (
+    //   selectedStarting.row === -1 ||
+    //   selectedStarting.col === -1 ||
+    //   selectedTarget.row === -1 ||
+    //   selectedTarget.col === -1
+    // )
+    //   return;
     const startNode =
       board[BOARD.DEFAULT_START_NODE_ROW][BOARD.DEFAULT_START_NODE_COL];
     const finishNode =
@@ -169,15 +169,15 @@ const App = () => {
     initializeGrid();
   }, [initializeGrid]);
 
-  useEffect(() => {
-    if (selectedStarting.row > -1 && selectedStarting.col > -1) {
-      setFlagStatus(CHECKPOINT_STATUS.TURN_ON);
-    }
+  // useEffect(() => {
+  //   if (selectedStarting.row > -1 && selectedStarting.col > -1) {
+  //     setFlagStatus(CHECKPOINT_STATUS.TURN_ON);
+  //   }
 
-    if (selectedTarget.row > -1 && selectedTarget.col > -1) {
-      setTargetStatus(CHECKPOINT_STATUS.TURN_ON);
-    }
-  }, [selectedStarting, selectedTarget]);
+  //   if (selectedTarget.row > -1 && selectedTarget.col > -1) {
+  //     setTargetStatus(CHECKPOINT_STATUS.TURN_ON);
+  //   }
+  // }, [selectedStarting, selectedTarget]);
 
   return (
     <div className="container mx-auto h-full flex flex-col">
