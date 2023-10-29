@@ -73,7 +73,7 @@ const App = () => {
       if (i === visitedNodesInOrder.length) {
         setTimeout(() => {
           animateShortestPath(nodesInShortestPathOrder);
-        }, 50 * i);
+        }, 10 * i);
         return;
       }
       setTimeout(() => {
@@ -82,7 +82,7 @@ const App = () => {
         if (el) {
           el.classList.add("node-visited");
         }
-      }, 50 * i);
+      }, 10 * i);
     }
   };
 
@@ -182,9 +182,9 @@ const App = () => {
   }, [initializeGrid]);
 
   return (
-    <Box>
+    <Stack sx={{ height: "100%" }}>
       <Header />
-      <Grid container sx={{ p: 2 }} spacing={2}>
+      <Grid container sx={{ p: 2, height: "100%" }} spacing={2}>
         <Grid item lg={4} md={4}>
           <Stack spacing={2} divider={<Divider />}>
             <Manipulator
@@ -208,9 +208,9 @@ const App = () => {
           </Stack>
         </Grid>
 
-        <Grid item lg={8} md={8}>
-          <Stack spacing={2} alignItems="flex-start">
-            <Stack direction="row" alignItems="center" spacing={1}>
+        <Grid item lg={8} md={8} sx={{height: '100%'}}>
+          <Stack spacing={2} alignItems="flex-start" sx={{ height: "100%" }}>
+            <Stack direction="row" spacing={1}>
               <Chip
                 variant="outlined"
                 icon={<Icon icon="ph:wall" />}
@@ -228,11 +228,17 @@ const App = () => {
               />
             </Stack>
 
-            <Board board={board} />
+            <Stack
+              sx={{ width: "100%", height: "100%" }}
+              alignItems="center"
+              justifyContent="center"
+            >
+              <Board board={board} />
+            </Stack>
           </Stack>
         </Grid>
       </Grid>
-    </Box>
+    </Stack>
   );
 };
 

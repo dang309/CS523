@@ -28,7 +28,7 @@ const Manipulator = (props: Props) => {
     setCols,
   } = props;
 
-  const addOneRow = () => {
+  const addAfterRow = () => {
     if (!board || (board && board.length < 1)) return;
 
     const temp: Node[] = [];
@@ -39,7 +39,18 @@ const Manipulator = (props: Props) => {
     setBoard((prev) => [...prev, temp]);
   };
 
-  const addOneColumn = () => {
+  const addBeforeRow = () => {
+    if (!board || (board && board.length < 1)) return;
+
+    const temp: Node[] = [];
+    for (let col = 0; col < board[0].length; col++) {
+      temp.push(createNode(board.length, col));
+    }
+
+    setBoard((prev) => [temp, ...prev]);
+  };
+
+  const addAfterColumn = () => {
     if (!board || (board && board.length < 1)) return;
     const cloneBoard = board.slice();
     for (let row = 0; row < cloneBoard.length; row++) {
@@ -48,6 +59,17 @@ const Manipulator = (props: Props) => {
 
     setBoard(cloneBoard);
   };
+
+  const addBeforeColumn = () => {
+    if (!board || (board && board.length < 1)) return;
+    const cloneBoard = board.slice();
+    for (let row = 0; row < cloneBoard.length; row++) {
+      cloneBoard[row].unshift(createNode(row, cloneBoard[row].length));
+    }
+
+    setBoard(cloneBoard);
+  };
+
 
   const transform = () => {
     const transposedArray: Node[][] = [];
@@ -75,7 +97,7 @@ const Manipulator = (props: Props) => {
       label: "Add after row",
       icon: "mdi:table-row-add-after",
       action: () => {
-        addOneRow();
+        addAfterRow();
       },
     },
     {
@@ -83,7 +105,7 @@ const Manipulator = (props: Props) => {
       label: "Add before row",
       icon: "mdi:table-row-add-before",
       action: () => {
-        addOneRow();
+        addBeforeRow();
       },
     },
     {
@@ -91,7 +113,7 @@ const Manipulator = (props: Props) => {
       label: "Add before column",
       icon: "mdi:table-column-add-before",
       action: () => {
-        addOneColumn();
+        addBeforeColumn();
       },
     },
     {
@@ -99,7 +121,7 @@ const Manipulator = (props: Props) => {
       label: "Add after column",
       icon: "mdi:table-column-add-after",
       action: () => {
-        addOneColumn();
+        addAfterColumn();
       },
     },
     {
@@ -107,7 +129,7 @@ const Manipulator = (props: Props) => {
       label: "Delete column",
       icon: "fluent:table-delete-column-16-regular",
       action: () => {
-        addOneColumn();
+        addAfterColumn();
       },
     },
     {
@@ -115,7 +137,7 @@ const Manipulator = (props: Props) => {
       label: "Delete row",
       icon: "fluent:table-delete-row-16-regular",
       action: () => {
-        addOneColumn();
+        addAfterColumn();
       },
     },
     {
