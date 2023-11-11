@@ -14,8 +14,9 @@ import Algorithms from "./components/Algorithms";
 import { dijkstra, getNodesInShortestPathOrder } from "./algorithms/dijkstra";
 import { recursiveDivisionMaze } from "./utils/maze";
 import Header from "./components/Header";
-import { Box, Grid, SelectChangeEvent, Stack } from "@mui/material";
+import { Box, Divider, Grid, SelectChangeEvent, Stack } from "@mui/material";
 import Picture from "./components/Picture";
+import ImageProcessing from "./components/ImageProcessing";
 
 const App = () => {
   const [imageData, setImageData] = useState<Pixel[][]>([]);
@@ -232,7 +233,7 @@ const App = () => {
 
   useEffect(() => {
     initializeGrid();
-    loadImageData();
+    // loadImageData();
   }, [initializeGrid, loadImageData]);
 
   // useEffect(() => {
@@ -248,9 +249,9 @@ const App = () => {
   return (
     <Box>
       <Header />
-      <Grid container>
+      <Grid container sx={{ p: 2 }} spacing={2}>
         <Grid item lg={4} md={4}>
-          <Stack direction="row">
+          <Stack spacing={2}>
             <Manipulator
               board={board}
               rows={rows}
@@ -262,6 +263,8 @@ const App = () => {
               setCols={setCols}
             />
 
+            <Divider />
+
             <Algorithms
               selectedAlgorithm={selectAlgorithm}
               algorithmActionStatus={algorithmActionStatus}
@@ -269,6 +272,10 @@ const App = () => {
               startAlgorithmAction={startAlgorithmAction}
               generateRecursiveDivisionMaze={generateRecursiveDivisionMaze}
             />
+
+            <Divider />
+
+            <ImageProcessing />
           </Stack>
         </Grid>
 
@@ -296,7 +303,7 @@ const App = () => {
             </div>
           </div>
           {/* <Board board={board} /> */}
-          <Picture imageData={imageData} />
+          {/* <Picture imageData={imageData} /> */}
         </Grid>
       </Grid>
     </Box>

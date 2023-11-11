@@ -70,7 +70,6 @@ const Manipulator = (props: Props) => {
     setBoard(cloneBoard);
   };
 
-
   const transform = () => {
     const transposedArray: Node[][] = [];
 
