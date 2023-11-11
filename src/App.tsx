@@ -1,30 +1,41 @@
 // @ts-nocheck
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
 
-// import Board from "./components/Board";
+import Board from "./components/Board";
 
 import { Icon } from "@iconify/react";
 
 import { ALGORITHM_ACTION_STATUS, BOARD, CHECKPOINT_STATUS } from "./constants";
 import Manipulator from "./components/Manipulator";
-import { Node, Pixel } from "./types";
+import { Node, TPixel } from "./types";
 import { createNode } from "./utils/common";
 import Algorithms from "./components/Algorithms";
 import { dijkstra, getNodesInShortestPathOrder } from "./algorithms/dijkstra";
 import { recursiveDivisionMaze } from "./utils/maze";
 import Header from "./components/Header";
-import { Box, Divider, Grid, SelectChangeEvent, Stack } from "@mui/material";
+import {
+  Box,
+  Chip,
+  CircularProgress,
+  Divider,
+  Grid,
+  SelectChangeEvent,
+  Stack,
+} from "@mui/material";
 import Picture from "./components/Picture";
 import ImageProcessing from "./components/ImageProcessing";
+import { flushSync } from "react-dom";
 
 const App = () => {
-  const [imageData, setImageData] = useState<Pixel[][]>([]);
+  const [imageData, setImageData] = useState<TPixel[][]>([]);
 
   const [rows, setRows] = useState(BOARD.INITIAL_ROWS);
   const [cols, setCols] = useState(BOARD.INITIAL_COLS);
   const [board, setBoard] = useState<Node[][]>([]);
   const [selectAlgorithm, setSelectAlgorithm] = useState<string>("dijkstra");
+  const [image, setImage] = useState<string>();
+  const [isLoadingImage, setIsLoadingImage] = useState<boolean>(false);
   const [flagStatus, setFlagStatus] = useState<CHECKPOINT_STATUS>(
     CHECKPOINT_STATUS.TURN_OFF
   );
@@ -48,7 +59,8 @@ const App = () => {
     col: BOARD.DEFAULT_FINISH_NODE_COL,
   });
 
-  const loadImageData = useCallback(() => {
+  const loadImageData = useCallback((imgSrc: string) => {
+    if (!imgSrc) return;
     const canvas = document.createElement("canvas") as HTMLCanvasElement;
     const imageArray: TPixel[][] = [];
 
@@ -58,6 +70,8 @@ const App = () => {
         const image = new Image();
 
         image.onload = function () {
+          setIsLoadingImage(true);
+
           canvas.width = image.width;
           canvas.height = image.height;
           ctx.drawImage(image, 0, 0, image.width, image.height);
@@ -80,10 +94,13 @@ const App = () => {
             imageArray.push(row);
           }
 
-          setImageData(imageArray);
+          flushSync(() => {
+            setImageData(imageArray);
+          });
+          setIsLoadingImage(false);
         };
 
-        image.src = "/image.jpg";
+        image.src = imgSrc;
       }
     }
   }, []);
@@ -102,6 +119,79 @@ const App = () => {
     },
     []
   );
+
+  const onChangeImage = (e: ChangeEvent) => {
+    const { files } = e.currentTarget;
+    if (files && files.length > 0) {
+      const file = files[0];
+      const url = URL.createObjectURL(file);
+
+      setImage(url);
+    }
+  };
+
+  const removeImage = () => {
+    setImage(null);
+  };
+
+  const handleGrayScale = () => {
+    setIsLoadingImage(true);
+    flushSync(() => {
+      setImageData((prev) => {
+        return prev.map((row) => {
+          return row.map((pixel) => {
+            const grayscale =
+              0.299 * pixel.red + 0.587 * pixel.green + 0.114 * pixel.blue;
+            return {
+              ...pixel,
+              red: grayscale,
+              green: grayscale,
+              blue: grayscale,
+            };
+          });
+        });
+      });
+    });
+    setIsLoadingImage(false);
+  };
+
+  const handleWarm = () => {
+    setIsLoadingImage(true);
+    flushSync(() => {
+      setImageData((prev) => {
+        return prev.map((row) => {
+          return row.map((pixel) => {
+            return {
+              ...pixel,
+              red: Math.min(pixel.red + 20, 255),
+              green: Math.min(pixel.green + 10, 255),
+              blue: Math.max(pixel.blue - 10, 0),
+            };
+          });
+        });
+      });
+    });
+    setIsLoadingImage(false);
+  };
+
+  const handleCool = () => {
+    setIsLoadingImage(true);
+    flushSync(() => {
+      setImageData((prev) => {
+        return prev.map((row) => {
+          return row.map((pixel) => {
+            return {
+              ...pixel,
+              red: Math.max(pixel.red - 20, 0),
+              green: Math.max(pixel.green - 10, 0),
+              blue: Math.min(pixel.blue + 20, 255),
+            };
+          });
+        });
+      });
+    });
+    setIsLoadingImage(false);
+  };
 
   const setGridSize = () => {
     if (!rows || !cols) return;
@@ -233,8 +323,12 @@ const App = () => {
 
   useEffect(() => {
     initializeGrid();
-    // loadImageData();
-  }, [initializeGrid, loadImageData]);
+  }, [initializeGrid]);
+
+  useEffect(() => {
+    console.log({ image });
+    loadImageData(image);
+  }, [image, loadImageData]);
 
   // useEffect(() => {
   //   if (selectedStarting.row > -1 && selectedStarting.col > -1) {
@@ -275,35 +369,50 @@ const App = () => {
 
             <Divider />
 
-            <ImageProcessing />
+            <ImageProcessing
+              onChangeImage={onChangeImage}
+              removeImage={removeImage}
+              handleGrayScale={handleGrayScale}
+              handleWarm={handleWarm}
+              handleCool={handleCool}
+            />
           </Stack>
         </Grid>
 
         <Grid item lg={8} md={8}>
           <div className="flex justify-center gap-2 mb-4">
-            <div className="flex items-center gap-2  border rounded p-1">
-              <div
-                style={{
-                  width: "24px",
-                  height: "24px",
-                  backgroundColor: "rgb(12, 53, 71)",
-                }}
-              />
-              <span>Wall</span>
-            </div>
+            <Chip
+              label="Wall"
+              icon={
+                <div
+                  style={{
+                    width: "24px",
+                    height: "24px",
+                    backgroundColor: "rgb(12, 53, 71)",
+                  }}
+                />
+              }
+            />
+            <Chip
+              label="Start"
+              icon={
+                <Icon icon="noto:mouse-face" style={{ fontSize: "24px" }} />
+              }
+            />
 
-            <div className="flex items-center gap-2  border rounded p-1">
-              <Icon icon="noto:mouse-face" style={{ fontSize: "24px" }} />
-              <span>Start</span>
-            </div>
-
-            <div className="flex items-center gap-2 border rounded p-1">
-              <Icon icon="emojione:cheese-wedge" style={{ fontSize: "24px" }} />
-              <span>Target</span>
-            </div>
+            <Chip
+              label="Target"
+              icon={
+                <Icon
+                  icon="emojione:cheese-wedge"
+                  style={{ fontSize: "24px" }}
+                />
+              }
+            />
           </div>
-          {/* <Board board={board} /> */}
-          {/* <Picture imageData={imageData} /> */}
+          {!image && <Board board={board} />}
+          {image && !isLoadingImage && <Picture imageData={imageData} />}{" "}
+          {isLoadingImage && <CircularProgress />}
         </Grid>
       </Grid>
     </Box>
