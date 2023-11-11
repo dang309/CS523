@@ -29,6 +29,7 @@ import ImageProcessing from "./components/ImageProcessing";
 import { flushSync } from "react-dom";
 
 const App = () => {
+  const [originImageData, setOriginImageData] = useState<TPixel[][]>([]);
   const [imageData, setImageData] = useState<TPixel[][]>([]);
 
   const [rows, setRows] = useState(BOARD.INITIAL_ROWS);
@@ -97,6 +98,7 @@ const App = () => {
 
           flushSync(() => {
             setImageData(imageArray);
+            setOriginImageData(imageArray);
           });
           setIsLoadingImage(false);
         };
@@ -135,8 +137,13 @@ const App = () => {
     setImage(null);
   };
 
+  const resetImage = () => {
+    setImageData(originImageData);
+  };
+
   const handleGrayScale = () => {
     setIsLoadingImage(true);
+
     flushSync(() => {
       setImageData((prev) => {
         return prev.map((row) => {
@@ -177,6 +184,7 @@ const App = () => {
 
   const handleCool = () => {
     setIsLoadingImage(true);
+
     flushSync(() => {
       setImageData((prev) => {
         return prev.map((row) => {
@@ -374,6 +382,7 @@ const App = () => {
             <ImageProcessing
               onChangeImage={onChangeImage}
               removeImage={removeImage}
+              resetImage={resetImage}
               handleGrayScale={handleGrayScale}
               handleWarm={handleWarm}
               handleCool={handleCool}
