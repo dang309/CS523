@@ -15,6 +15,7 @@ import { dijkstra, getNodesInShortestPathOrder } from "./algorithms/dijkstra";
 import { recursiveDivisionMaze } from "./utils/maze";
 import Header from "./components/Header";
 import {
+  Backdrop,
   Box,
   Chip,
   CircularProgress,
@@ -69,9 +70,9 @@ const App = () => {
       if (ctx) {
         const image = new Image();
 
-        image.onload = function () {
-          setIsLoadingImage(true);
+        setIsLoadingImage(true);
 
+        image.onload = function () {
           canvas.width = image.width;
           canvas.height = image.height;
           ctx.drawImage(image, 0, 0, image.width, image.height);
@@ -340,6 +341,7 @@ const App = () => {
   //   }
   // }, [selectedStarting, selectedTarget]);
 
+  console.log({ isLoadingImage });
   return (
     <Box>
       <Header />
@@ -380,39 +382,51 @@ const App = () => {
         </Grid>
 
         <Grid item lg={8} md={8}>
-          <div className="flex justify-center gap-2 mb-4">
-            <Chip
-              label="Wall"
-              icon={
-                <div
-                  style={{
-                    width: "24px",
-                    height: "24px",
-                    backgroundColor: "rgb(12, 53, 71)",
-                  }}
+          {!image && !isLoadingImage && (
+            <Stack spacing={2} alignItems="center">
+              <Stack direction="row">
+                <Chip
+                  label="Wall"
+                  icon={
+                    <div
+                      style={{
+                        width: "24px",
+                        height: "24px",
+                        backgroundColor: "rgb(12, 53, 71)",
+                      }}
+                    />
+                  }
                 />
-              }
-            />
-            <Chip
-              label="Start"
-              icon={
-                <Icon icon="noto:mouse-face" style={{ fontSize: "24px" }} />
-              }
-            />
+                <Chip
+                  label="Start"
+                  icon={
+                    <Icon icon="noto:mouse-face" style={{ fontSize: "24px" }} />
+                  }
+                />
 
-            <Chip
-              label="Target"
-              icon={
-                <Icon
-                  icon="emojione:cheese-wedge"
-                  style={{ fontSize: "24px" }}
+                <Chip
+                  label="Target"
+                  icon={
+                    <Icon
+                      icon="emojione:cheese-wedge"
+                      style={{ fontSize: "24px" }}
+                    />
+                  }
                 />
-              }
-            />
-          </div>
-          {!image && <Board board={board} />}
-          {image && !isLoadingImage && <Picture imageData={imageData} />}{" "}
-          {isLoadingImage && <CircularProgress />}
+              </Stack>
+              <Board board={board} />
+            </Stack>
+          )}
+          <Stack alignItems="center" justifyContent="center">
+            <Stack sx={{ height: "100%" }}>
+              {image && !isLoadingImage && <Picture imageData={imageData} />}{" "}
+            </Stack>
+          </Stack>
+          {isLoadingImage && (
+            <Backdrop open>
+              <CircularProgress disableShrink />
+            </Backdrop>
+          )}
         </Grid>
       </Grid>
     </Box>
