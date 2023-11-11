@@ -14,3 +14,10 @@ export type Point = {
   row: number;
   col: number;
 };
+
+export type TPixel = {
+  red: number;
+  green: number;
+  blue: number;
+  alpha: number;
+};
