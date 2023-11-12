@@ -29,6 +29,7 @@ import ImageProcessing from "./components/ImageProcessing";
 import { flushSync } from "react-dom";
 
 import { useTour } from "@reactour/tour";
+import Welcome from "./components/Welcome";
 
 const App = () => {
   const { setIsOpen } = useTour();
@@ -346,6 +347,10 @@ const App = () => {
     }
   };
 
+  const startTheTour = () => {
+    setIsOpen(true);
+  };
+
   useEffect(() => {
     initializeGrid();
   }, [initializeGrid]);
@@ -353,10 +358,6 @@ const App = () => {
   useEffect(() => {
     loadImageData(image);
   }, [image, loadImageData]);
-
-  useEffect(() => {
-    setIsOpen(true);
-  }, []);
 
   // useEffect(() => {
   //   if (selectedStarting.row > -1 && selectedStarting.col > -1) {
@@ -449,6 +450,7 @@ const App = () => {
           )}
         </Grid>
       </Grid>
+      <Welcome startTheTour={startTheTour} />
     </Box>
   );
 };
