@@ -31,6 +31,7 @@ const Algorithms = (props: Props) => {
   return (
     <Stack spacing={2} alignItems="flex-start">
       <Button
+        className="generate-maze-btn"
         variant="outlined"
         size="small"
         onClick={generateRecursiveDivisionMaze}
@@ -38,7 +39,7 @@ const Algorithms = (props: Props) => {
         Generate random maze
       </Button>
 
-      <Box>
+      <Box className="algo-options">
         <FormControl fullWidth>
           <InputLabel id="demo-simple-select-label">Algorithms</InputLabel>
           <Select
@@ -59,6 +60,7 @@ const Algorithms = (props: Props) => {
       </Box>
 
       <Button
+        className="start-btn"
         variant="contained"
         disabled={algorithmActionStatus === ALGORITHM_ACTION_STATUS.RUNNING}
         onClick={startAlgorithmAction}

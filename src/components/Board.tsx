@@ -42,7 +42,7 @@ const Board = (props: Props) => {
   // };
 
   return (
-    <table>
+    <table className="board">
       <tbody>
         {board &&
           board.map((row, rowIndex) => {

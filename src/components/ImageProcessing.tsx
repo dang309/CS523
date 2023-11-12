@@ -23,21 +23,35 @@ const ImageProcessing = (props: Props) => {
     <Stack spacing={2} alignItems="flex-start">
       <Stack direction="row" spacing={2}>
         <FileUploadButton onChangeImage={onChangeImage} />
-        <Button variant="contained" color="warning" onClick={resetImage}>
+        <Button
+          variant="contained"
+          color="warning"
+          onClick={resetImage}
+          className="reset-btn"
+        >
           Reset
         </Button>
-        <Button variant="contained" color="error" onClick={removeImage}>
+        <Button
+          variant="contained"
+          color="error"
+          onClick={removeImage}
+          className="remove-btn"
+        >
           Remove
         </Button>
       </Stack>{" "}
       <ButtonGroup>
-        <Button variant="outlined" onClick={handleGrayScale}>
+        <Button
+          variant="outlined"
+          onClick={handleGrayScale}
+          className="grayscale-btn"
+        >
           Gray
         </Button>
-        <Button variant="outlined" onClick={handleWarm}>
+        <Button variant="outlined" onClick={handleWarm} className="warm-btn">
           Warm
         </Button>
-        <Button variant="outlined" onClick={handleCool}>
+        <Button variant="outlined" onClick={handleCool} className="cool-btn">
           Cool
         </Button>
       </ButtonGroup>

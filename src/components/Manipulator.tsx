@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Tooltip } from "@mui/material";
+import { Box, Button, ButtonGroup, Tooltip } from "@mui/material";
 import { BOARD } from "../constants";
 import { Node } from "../types";
 import { createNode } from "../utils/common";
@@ -173,18 +173,16 @@ const Manipulator = (props: Props) => {
     },
   ];
   return (
-    <ButtonGroup size="large">
+    <ButtonGroup size="large" className="manipulation-btns">
       {leftButtons &&
         leftButtons.map((button) => {
           return (
             <Tooltip key={button.id} title={button.label}>
-              <Button
-                type="button"
-                className="p-2 flex items-center gap-1 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-                onClick={button.action}
-              >
-                <Icon icon={button.icon} />
-              </Button>
+              <Box id={button.id.toString()}>
+                <Button type="button" onClick={button.action}>
+                  <Icon icon={button.icon} />
+                </Button>
+              </Box>
             </Tooltip>
           );
         })}

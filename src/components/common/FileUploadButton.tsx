@@ -25,6 +25,7 @@ export default function FileUploadButton(props: Props) {
       component="label"
       variant="contained"
       startIcon={<CloudUploadIcon />}
+      className="upload-btn"
     >
       Upload file
       <VisuallyHiddenInput type="file" onChange={onChangeImage} />

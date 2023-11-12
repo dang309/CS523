@@ -9,7 +9,7 @@ import { Icon } from "@iconify/react";
 import { ALGORITHM_ACTION_STATUS, BOARD, CHECKPOINT_STATUS } from "./constants";
 import Manipulator from "./components/Manipulator";
 import { Node, TPixel } from "./types";
-import { createNode } from "./utils/common";
+import { createNode, steps } from "./utils/common";
 import Algorithms from "./components/Algorithms";
 import { dijkstra, getNodesInShortestPathOrder } from "./algorithms/dijkstra";
 import { recursiveDivisionMaze } from "./utils/maze";
@@ -28,10 +28,13 @@ import Picture from "./components/Picture";
 import ImageProcessing from "./components/ImageProcessing";
 import { flushSync } from "react-dom";
 
+import { useTour } from "@reactour/tour";
+
 const App = () => {
+  const { setIsOpen } = useTour();
+
   const [originImageData, setOriginImageData] = useState<TPixel[][]>([]);
   const [imageData, setImageData] = useState<TPixel[][]>([]);
-
   const [rows, setRows] = useState(BOARD.INITIAL_ROWS);
   const [cols, setCols] = useState(BOARD.INITIAL_COLS);
   const [board, setBoard] = useState<Node[][]>([]);
@@ -348,9 +351,12 @@ const App = () => {
   }, [initializeGrid]);
 
   useEffect(() => {
-    console.log({ image });
     loadImageData(image);
   }, [image, loadImageData]);
+
+  useEffect(() => {
+    setIsOpen(true);
+  }, []);
 
   // useEffect(() => {
   //   if (selectedStarting.row > -1 && selectedStarting.col > -1) {
