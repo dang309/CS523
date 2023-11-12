@@ -2,6 +2,8 @@ import "../styles/pixel.css";
 
 import { TPixel } from "../types";
 
+import { motion } from "framer-motion";
+
 type Props = {
   pixel: TPixel;
   rowIndex: number;
@@ -13,12 +15,16 @@ const Pixel = (props: Props) => {
   const { red, green, blue, alpha } = pixel;
 
   return (
-    <div
+    <motion.div
       id={`${rowIndex}-${colIndex}`}
+      initial={{
+        scale: 1,
+      }}
       style={{
-        width: "1px",
-        height: "1px",
+        width: "8px",
+        height: "8px",
         backgroundColor: `rgba(${red}, ${green}, ${blue}, ${alpha})`,
+        margin: "0.5px",
       }}
     />
   );

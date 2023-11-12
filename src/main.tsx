@@ -44,14 +44,6 @@ export const steps = [
     content: "Grayscale image",
   },
   {
-    selector: ".warm-btn",
-    content: "Enhance image warmer",
-  },
-  {
-    selector: ".cool-btn",
-    content: "Enhance image cooler",
-  },
-  {
     selector: ".board",
     content: "2D array for visualization",
   },

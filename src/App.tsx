@@ -32,7 +32,6 @@ import Welcome from "./components/Welcome";
 const App = () => {
   const { setIsOpen } = useTour();
 
-  const [originImageData, setOriginImageData] = useState<TPixel[][]>([]);
   const [imageData, setImageData] = useState<TPixel[][]>([]);
   const [rows, setRows] = useState(BOARD.INITIAL_ROWS);
   const [cols, setCols] = useState(BOARD.INITIAL_COLS);
@@ -44,7 +43,7 @@ const App = () => {
   const [algorithmActionStatus, setAlgorithmActionStatus] =
     useState<ALGORITHM_ACTION_STATUS>(ALGORITHM_ACTION_STATUS.IDLE);
 
-  const loadImageData = useCallback((imgSrc?: string) => {
+  const loadImageData = (imgSrc?: string) => {
     if (!imgSrc) return;
     const canvas = document.createElement("canvas") as HTMLCanvasElement;
     const imageArray: TPixel[][] = [];
@@ -81,7 +80,6 @@ const App = () => {
 
           flushSync(() => {
             setImageData(imageArray);
-            setOriginImageData(imageArray);
           });
           setIsLoadingImage(false);
         };
@@ -89,7 +87,7 @@ const App = () => {
         image.src = imgSrc;
       }
     }
-  }, []);
+  };
 
   const initializeGrid = useCallback(
     (rows = BOARD.INITIAL_ROWS, cols = BOARD.INITIAL_COLS) => {
@@ -121,68 +119,39 @@ const App = () => {
   };
 
   const resetImage = () => {
-    setImageData(originImageData);
+    for (let i = 0; i < imageData.length; i++) {
+      for (let j = 0; j < imageData[0].length; j++) {
+        const id = `${i}-${j}`;
+        const el = document.getElementById(id);
+        const pixel = imageData[i][j];
+
+        if (el) {
+          el.classList.remove("pixel-gray");
+
+          el.style.backgroundColor = `rgb(${pixel.red}, ${pixel.green}, ${pixel.blue})`;
+        }
+      }
+    }
   };
 
   const handleGrayScale = () => {
-    setIsLoadingImage(true);
+    for (let i = 0; i < imageData.length; i++) {
+      for (let j = 0; j < imageData[0].length; j++) {
+        const id = `${i}-${j}`;
+        const el = document.getElementById(id);
+        const pixel = imageData[i][j];
+        const grayscale =
+          0.299 * pixel.red + 0.587 * pixel.green + 0.114 * pixel.blue;
 
-    flushSync(() => {
-      setImageData((prev) => {
-        return prev.map((row) => {
-          return row.map((pixel) => {
-            const grayscale =
-              0.299 * pixel.red + 0.587 * pixel.green + 0.114 * pixel.blue;
-            return {
-              ...pixel,
-              red: grayscale,
-              green: grayscale,
-              blue: grayscale,
-            };
-          });
-        });
-      });
-    });
-    setIsLoadingImage(false);
-  };
+        if (el) {
+          setTimeout(() => {
+            el.classList.add("pixel-gray");
 
-  const handleWarm = () => {
-    setIsLoadingImage(true);
-    flushSync(() => {
-      setImageData((prev) => {
-        return prev.map((row) => {
-          return row.map((pixel) => {
-            return {
-              ...pixel,
-              red: Math.min(pixel.red + 20, 255),
-              green: Math.min(pixel.green + 10, 255),
-              blue: Math.max(pixel.blue - 10, 0),
-            };
-          });
-        });
-      });
-    });
-    setIsLoadingImage(false);
-  };
-
-  const handleCool = () => {
-    setIsLoadingImage(true);
-
-    flushSync(() => {
-      setImageData((prev) => {
-        return prev.map((row) => {
-          return row.map((pixel) => {
-            return {
-              ...pixel,
-              red: Math.max(pixel.red - 20, 0),
-              green: Math.max(pixel.green - 10, 0),
-              blue: Math.min(pixel.blue + 20, 255),
-            };
-          });
-        });
-      });
-    });
-    setIsLoadingImage(false);
+            el.style.backgroundColor = `rgb(${grayscale}, ${grayscale}, ${grayscale})`;
+          }, 5 * i);
+        }
+      }
+    }
   };
 
   const setGridSize = () => {
@@ -334,7 +303,7 @@ const App = () => {
 
   useEffect(() => {
     loadImageData(image);
-  }, [image, loadImageData]);
+  }, [image]);
 
   // useEffect(() => {
   //   if (selectedStarting.row > -1 && selectedStarting.col > -1) {
@@ -381,8 +350,6 @@ const App = () => {
               removeImage={removeImage}
               resetImage={resetImage}
               handleGrayScale={handleGrayScale}
-              handleWarm={handleWarm}
-              handleCool={handleCool}
             />
           </Stack>
         </Grid>

@@ -1,3 +1,28 @@
 .gray-scale-pixel {
   background: grey;
 }
+
+.pixel-gray {
+  animation-name: grayscaleAnimation;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-out;
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+}
+
+@keyframes grayscaleAnimation {
+  0% {
+    transform: scale(3);
+  }
+
+  50% {
+    transform: scale(1.2);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}

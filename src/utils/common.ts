@@ -64,7 +64,6 @@ export const convertImgTo2DArray = (imgSrc: string) => {
       image.src = imgSrc;
     }
   }
-  console.log({ imageArray });
   return imageArray;
 };
 

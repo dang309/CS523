@@ -7,19 +7,10 @@ type Props = {
   removeImage: () => void;
   resetImage: () => void;
   handleGrayScale: () => void;
-  handleWarm: () => void;
-  handleCool: () => void;
 };
 
 const ImageProcessing = (props: Props) => {
-  const {
-    onChangeImage,
-    removeImage,
-    resetImage,
-    handleGrayScale,
-    handleWarm,
-    handleCool,
-  } = props;
+  const { onChangeImage, removeImage, resetImage, handleGrayScale } = props;
   return (
     <Stack spacing={2} alignItems="flex-start">
       <Stack direction="row" spacing={2}>
@@ -47,13 +38,7 @@ const ImageProcessing = (props: Props) => {
           onClick={handleGrayScale}
           className="grayscale-btn"
         >
-          Gray
-        </Button>
-        <Button variant="outlined" onClick={handleWarm} className="warm-btn">
-          Warm
-        </Button>
-        <Button variant="outlined" onClick={handleCool} className="cool-btn">
-          Cool
+          Grayscale
         </Button>
       </ButtonGroup>
     </Stack>
