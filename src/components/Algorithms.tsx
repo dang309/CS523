@@ -1,4 +1,3 @@
-import { FormEvent } from "react";
 import { ALGORITHM_ACTION_STATUS } from "../constants";
 import {
   Box,
@@ -10,6 +9,8 @@ import {
   SelectChangeEvent,
   Stack,
 } from "@mui/material";
+import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
+import RestartAltOutlinedIcon from "@mui/icons-material/RestartAltOutlined";
 
 type Props = {
   selectedAlgorithm: string;
@@ -29,72 +30,6 @@ const Algorithms = (props: Props) => {
   } = props;
   return (
     <Stack spacing={2} alignItems="flex-start">
-      {/* <button */}
-      {/*   type="button" */}
-      {/*   className={clsx( */}
-      {/*     "p-2 flex items-center gap-1 text-sm font-medium text-gray-900 focus:outline-none rounded-lg border border-gray-200 focus:z-10 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700", */}
-      {/*     (flagStatus === CHECKPOINT_STATUS.TURN_ON || */}
-      {/*       flagStatus === CHECKPOINT_STATUS.CHOOSING) && */}
-      {/*       "bg-blue-500" */}
-      {/*   )} */}
-      {/*   onClick={() => { */}
-      {/*     if (targetStatus === CHECKPOINT_STATUS.CHOOSING) { */}
-      {/*       setTargetStatus(CHECKPOINT_STATUS.TURN_OFF); */}
-      {/*     } */}
-      {/*     if (flagStatus === CHECKPOINT_STATUS.TURN_OFF) { */}
-      {/*       setFlagStatus(CHECKPOINT_STATUS.CHOOSING); */}
-      {/*     } else if ( */}
-      {/*       flagStatus === CHECKPOINT_STATUS.TURN_ON || */}
-      {/*       flagStatus === CHECKPOINT_STATUS.CHOOSING */}
-      {/*     ) { */}
-      {/*       setFlagStatus(CHECKPOINT_STATUS.TURN_OFF); */}
-      {/*       setSelectedStarting({ row: -1, col: -1 }); */}
-      {/*     } */}
-      {/*   }} */}
-      {/* > */}
-      {/*   <Icon */}
-      {/*     icon="material-symbols:flag" */}
-      {/*     className={clsx( */}
-      {/*       (flagStatus === CHECKPOINT_STATUS.TURN_ON || */}
-      {/*         flagStatus === CHECKPOINT_STATUS.CHOOSING) && */}
-      {/*         "text-white" */}
-      {/*     )} */}
-      {/*   /> */}
-      {/* </button> */}
-
-      {/* <button */}
-      {/*   type="button" */}
-      {/*   className={clsx( */}
-      {/*     "p-2 flex items-center gap-1 text-sm font-medium text-gray-900 focus:outline-none rounded-lg border focus:z-10 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700", */}
-      {/*     (targetStatus === CHECKPOINT_STATUS.TURN_ON || */}
-      {/*       targetStatus === CHECKPOINT_STATUS.CHOOSING) && */}
-      {/*       "bg-blue-500" */}
-      {/*   )} */}
-      {/*   onClick={() => { */}
-      {/*     if (flagStatus === CHECKPOINT_STATUS.CHOOSING) { */}
-      {/*       setFlagStatus(CHECKPOINT_STATUS.TURN_OFF); */}
-      {/*     } */}
-      {/*     if (targetStatus === CHECKPOINT_STATUS.TURN_OFF) { */}
-      {/*       setTargetStatus(CHECKPOINT_STATUS.CHOOSING); */}
-      {/*     } else if ( */}
-      {/*       targetStatus === CHECKPOINT_STATUS.TURN_ON || */}
-      {/*       targetStatus === CHECKPOINT_STATUS.CHOOSING */}
-      {/*     ) { */}
-      {/*       setTargetStatus(CHECKPOINT_STATUS.TURN_OFF); */}
-      {/*       setSelectedTarget({ row: -1, col: -1 }); */}
-      {/*     } */}
-      {/*   }} */}
-      {/* > */}
-      {/*   <Icon */}
-      {/*     icon="material-symbols:target" */}
-      {/*     className={clsx( */}
-      {/*       (targetStatus === CHECKPOINT_STATUS.TURN_ON || */}
-      {/*         targetStatus === CHECKPOINT_STATUS.CHOOSING) && */}
-      {/*         "text-white" */}
-      {/*     )} */}
-      {/*   /> */}
-      {/* </button> */}
-
       <Button
         variant="outlined"
         size="small"
@@ -124,11 +59,29 @@ const Algorithms = (props: Props) => {
       </Box>
 
       <Button
-      variant="contained"
+        variant="contained"
         disabled={algorithmActionStatus === ALGORITHM_ACTION_STATUS.RUNNING}
         onClick={startAlgorithmAction}
+        color={
+          algorithmActionStatus === ALGORITHM_ACTION_STATUS.IDLE ||
+          algorithmActionStatus === ALGORITHM_ACTION_STATUS.RUNNING
+            ? "primary"
+            : "error"
+        }
+        startIcon={
+          algorithmActionStatus === ALGORITHM_ACTION_STATUS.IDLE ||
+          algorithmActionStatus === ALGORITHM_ACTION_STATUS.RUNNING ? (
+            <PlayArrowOutlinedIcon />
+          ) : (
+            <RestartAltOutlinedIcon />
+          )
+        }
       >
-        Run
+        {algorithmActionStatus === ALGORITHM_ACTION_STATUS.IDLE
+          ? "Run"
+          : algorithmActionStatus === ALGORITHM_ACTION_STATUS.DONE
+          ? "Reset"
+          : "Run"}
       </Button>
     </Stack>
   );

@@ -212,36 +212,46 @@ const App = () => {
   };
 
   const animateShortestPath = (nodesInShortestPathOrder: Node[]) => {
+    const promises = [];
     for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
-      setTimeout(() => {
-        const node = nodesInShortestPathOrder[i];
-        const el = document.getElementById(`${node.row}-${node.col}`);
-        if (el) {
-          el.classList.add("node-shortest-path");
-        }
-      }, 50 * i);
+      promises.push(
+        setTimeout(() => {
+          const node = nodesInShortestPathOrder[i];
+          const el = document.getElementById(`${node.row}-${node.col}`);
+          if (el) {
+            el.classList.add("node-shortest-path");
+          }
+        }, 50 * i)
+      );
     }
+
+    return Promise.all(promises);
   };
 
   const animateDijkstra = (
     visitedNodesInOrder: Node[],
     nodesInShortestPathOrder: Node[]
   ) => {
+    const promises = [];
     for (let i = 0; i <= visitedNodesInOrder.length; i++) {
       if (i === visitedNodesInOrder.length) {
-        setTimeout(() => {
-          animateShortestPath(nodesInShortestPathOrder);
-        }, 10 * i);
-        return;
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            animateShortestPath(nodesInShortestPathOrder).then(resolve);
+          }, 10 * i);
+        });
       }
-      setTimeout(() => {
-        const node = visitedNodesInOrder[i];
-        const el = document.getElementById(`${node.row}-${node.col}`);
-        if (el) {
-          el.classList.add("node-visited");
-        }
-      }, 10 * i);
+      promises.push(
+        setTimeout(() => {
+          const node = visitedNodesInOrder[i];
+          const el = document.getElementById(`${node.row}-${node.col}`);
+          if (el) {
+            el.classList.add("node-visited");
+          }
+        }, 10 * i)
+      );
     }
+    return Promise.all(promises);
   };
 
   const animateWalls = (walls: Node[]) => {
@@ -273,7 +283,7 @@ const App = () => {
     const visitedNodesInOrder = dijkstra(board, startNode, finishNode);
     const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
     if (visitedNodesInOrder) {
-      animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
+      return animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
     }
   };
 
@@ -285,6 +295,8 @@ const App = () => {
           const el = document.getElementById(id);
           if (id) {
             el?.classList.remove("node-visited");
+            el?.classList.remove("node-shortest-path");
+            el?.classList.remove("node-wall");
           }
           node.isVisited = false;
         }
@@ -295,11 +307,12 @@ const App = () => {
 
   const startAlgorithmAction = async () => {
     if (!selectAlgorithm) return;
-    visualizeDijkstra();
     if (algorithmActionStatus === ALGORITHM_ACTION_STATUS.IDLE) {
       setAlgorithmActionStatus(ALGORITHM_ACTION_STATUS.RUNNING);
-      visualizeDijkstra();
-    } else if (algorithmActionStatus === ALGORITHM_ACTION_STATUS.RUNNING) {
+      visualizeDijkstra()?.then(() => {
+        setAlgorithmActionStatus(ALGORITHM_ACTION_STATUS.DONE);
+      });
+    } else if (algorithmActionStatus === ALGORITHM_ACTION_STATUS.DONE) {
       setAlgorithmActionStatus(ALGORITHM_ACTION_STATUS.IDLE);
       clearBoard();
     }
@@ -396,15 +409,7 @@ const App = () => {
               <Stack direction="row">
                 <Chip
                   label="Wall"
-                  icon={
-                    <div
-                      style={{
-                        width: "24px",
-                        height: "24px",
-                        backgroundColor: "rgb(12, 53, 71)",
-                      }}
-                    />
-                  }
+                  icon={<Icon icon="ph:wall" style={{ fontSize: "24px" }} />}
                 />
                 <Chip
                   label="Start"
