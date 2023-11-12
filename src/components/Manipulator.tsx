@@ -70,6 +70,22 @@ const Manipulator = (props: Props) => {
     setBoard(cloneBoard);
   };
 
+  const deleteColumn = () => {
+    setBoard((prev) => {
+      return prev.map((row) => {
+        row.pop();
+        return row;
+      });
+    });
+  };
+
+  const deleteRow = () => {
+    setBoard((prev) => {
+      prev.pop();
+      return prev.map((row) => row);
+    });
+  };
+
   const transform = () => {
     const transposedArray: Node[][] = [];
 
@@ -128,7 +144,7 @@ const Manipulator = (props: Props) => {
       label: "Delete column",
       icon: "fluent:table-delete-column-16-regular",
       action: () => {
-        addAfterColumn();
+        deleteColumn();
       },
     },
     {
@@ -136,7 +152,7 @@ const Manipulator = (props: Props) => {
       label: "Delete row",
       icon: "fluent:table-delete-row-16-regular",
       action: () => {
-        addAfterColumn();
+        deleteRow();
       },
     },
     {
