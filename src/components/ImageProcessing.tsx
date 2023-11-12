@@ -1,8 +1,9 @@
 import { Button, ButtonGroup, Stack } from "@mui/material";
 import FileUploadButton from "./common/FileUploadButton";
+import { ChangeEvent } from "react";
 
 type Props = {
-  onChangeImage: () => void;
+  onChangeImage: (_: ChangeEvent) => void;
   removeImage: () => void;
   resetImage: () => void;
   handleGrayScale: () => void;

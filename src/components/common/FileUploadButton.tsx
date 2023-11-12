@@ -1,6 +1,7 @@
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { ChangeEvent } from "react";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -15,7 +16,7 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 type Props = {
-  onChangeImage: () => void;
+  onChangeImage: (_: ChangeEvent) => void;
 };
 
 export default function FileUploadButton(props: Props) {

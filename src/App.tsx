@@ -1,15 +1,13 @@
-// @ts-nocheck
-
-import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
 
 import Board from "./components/Board";
 
 import { Icon } from "@iconify/react";
 
-import { ALGORITHM_ACTION_STATUS, BOARD, CHECKPOINT_STATUS } from "./constants";
+import { ALGORITHM_ACTION_STATUS, BOARD } from "./constants";
 import Manipulator from "./components/Manipulator";
 import { Node, TPixel } from "./types";
-import { createNode, steps } from "./utils/common";
+import { createNode } from "./utils/common";
 import Algorithms from "./components/Algorithms";
 import { dijkstra, getNodesInShortestPathOrder } from "./algorithms/dijkstra";
 import { recursiveDivisionMaze } from "./utils/maze";
@@ -42,30 +40,11 @@ const App = () => {
   const [selectAlgorithm, setSelectAlgorithm] = useState<string>("dijkstra");
   const [image, setImage] = useState<string>();
   const [isLoadingImage, setIsLoadingImage] = useState<boolean>(false);
-  const [flagStatus, setFlagStatus] = useState<CHECKPOINT_STATUS>(
-    CHECKPOINT_STATUS.TURN_OFF
-  );
-  const [targetStatus, setTargetStatus] = useState<CHECKPOINT_STATUS>(
-    CHECKPOINT_STATUS.TURN_OFF
-  );
+
   const [algorithmActionStatus, setAlgorithmActionStatus] =
     useState<ALGORITHM_ACTION_STATUS>(ALGORITHM_ACTION_STATUS.IDLE);
-  const [selectedStart, setSelectedStart] = useState<{
-    row: number;
-    col: number;
-  }>({
-    row: BOARD.DEFAULT_START_NODE_ROW,
-    col: BOARD.DEFAULT_START_NODE_COL,
-  });
-  const [selectedTarget, setSelectedTarget] = useState<{
-    row: number;
-    col: number;
-  }>({
-    row: BOARD.DEFAULT_FINISH_NODE_ROW,
-    col: BOARD.DEFAULT_FINISH_NODE_COL,
-  });
 
-  const loadImageData = useCallback((imgSrc: string) => {
+  const loadImageData = useCallback((imgSrc?: string) => {
     if (!imgSrc) return;
     const canvas = document.createElement("canvas") as HTMLCanvasElement;
     const imageArray: TPixel[][] = [];
@@ -128,7 +107,7 @@ const App = () => {
   );
 
   const onChangeImage = (e: ChangeEvent) => {
-    const { files } = e.currentTarget;
+    const { files } = e.target as HTMLInputElement;
     if (files && files.length > 0) {
       const file = files[0];
       const url = URL.createObjectURL(file);
@@ -138,7 +117,7 @@ const App = () => {
   };
 
   const removeImage = () => {
-    setImage(null);
+    setImage("");
   };
 
   const resetImage = () => {
@@ -259,54 +238,52 @@ const App = () => {
   };
 
   const animateWalls = (walls: Node[]) => {
+    const promises = [];
     for (let i = 0; i < walls.length; i++) {
-      setTimeout(() => {
-        const node = walls[i];
-        const el = document.getElementById(`${node.row}-${node.col}`);
-        if (el) {
-          el.classList.add("node-wall");
-        }
-      }, 10 * i);
+      promises.push(
+        setTimeout(() => {
+          const node = walls[i];
+          const el = document.getElementById(`${node.row}-${node.col}`);
+          if (el) {
+            el.classList.add("node-wall");
+          }
+        }, 10 * i)
+      );
     }
+    return Promise.all(promises);
   };
 
   const visualizeDijkstra = () => {
     if (!board) return;
     if (board && board.length === 0) return;
-    if (
-      selectedStart.row === -1 ||
-      selectedStart.col === -1 ||
-      selectedTarget.row === -1 ||
-      selectedTarget.col === -1
-    )
-      return;
     const startNode =
       board[BOARD.DEFAULT_START_NODE_ROW][BOARD.DEFAULT_START_NODE_COL];
     const finishNode =
       board[BOARD.DEFAULT_FINISH_NODE_ROW][BOARD.DEFAULT_FINISH_NODE_COL];
     const visitedNodesInOrder = dijkstra(board, startNode, finishNode);
     const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+    console.log({ visitedNodesInOrder });
     if (visitedNodesInOrder) {
       return animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
     }
+    return new Promise((resolve) => resolve);
   };
 
   const clearBoard = () => {
-    setBoard((prev: Node[][]) => {
-      for (const row of prev) {
-        for (const node of row) {
-          const id = `${node.row}-${node.col}`;
-          const el = document.getElementById(id);
-          if (id) {
-            el?.classList.remove("node-visited");
-            el?.classList.remove("node-shortest-path");
-            el?.classList.remove("node-wall");
-          }
-          node.isVisited = false;
+    flushSync(() => {
+      initializeGrid();
+    });
+    for (const row of board) {
+      for (const node of row) {
+        const id = `${node.row}-${node.col}`;
+        const el = document.getElementById(id);
+        if (id) {
+          el?.classList.remove("node-visited");
+          el?.classList.remove("node-shortest-path");
+          el?.classList.remove("node-wall");
         }
       }
-      return prev;
-    });
+    }
   };
 
   const startAlgorithmAction = async () => {
@@ -317,8 +294,8 @@ const App = () => {
         setAlgorithmActionStatus(ALGORITHM_ACTION_STATUS.DONE);
       });
     } else if (algorithmActionStatus === ALGORITHM_ACTION_STATUS.DONE) {
-      setAlgorithmActionStatus(ALGORITHM_ACTION_STATUS.IDLE);
       clearBoard();
+      setAlgorithmActionStatus(ALGORITHM_ACTION_STATUS.IDLE);
     }
   };
 
