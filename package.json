@@ -17,12 +17,9 @@
     "@reactour/tour": "^3.6.1",
     "clsx": "^2.0.0",
     "framer-motion": "^10.16.4",
-    "intro.js": "^7.2.0",
-    "intro.js-react": "^1.0.0",
     "justified-layout": "^4.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "reactour": "^1.19.2",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

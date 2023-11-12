@@ -17,16 +17,7 @@ type Props = {
 };
 
 const Manipulator = (props: Props) => {
-  const {
-    board,
-    setBoard,
-    rows,
-    cols,
-    setGridSize,
-    initializeGrid,
-    setRows,
-    setCols,
-  } = props;
+  const { board, setBoard, initializeGrid, setRows, setCols } = props;
 
   const addAfterRow = () => {
     if (!board || (board && board.length < 1)) return;
