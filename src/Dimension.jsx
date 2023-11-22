@@ -12,10 +12,12 @@ const Dimension = ({ grid, addOneRow, addOneColumn }) => {
               grid.map((row, i) => {
                 return (
                   <Stack key={i} direction="row">
-                    {row.map((node, j) => {
+                    {row.map((item, j) => {
+                      if (item === null) return;
                       return (
                         <Box
                           key={j}
+                          className={`node-${i}-${j}`}
                           sx={{
                             width: "24px",
                             height: "24px",
@@ -28,7 +30,7 @@ const Dimension = ({ grid, addOneRow, addOneColumn }) => {
                             justifyContent: "center",
                           }}
                         >
-                          {node}
+                          {item}
                         </Box>
                       );
                     })}
