@@ -2,12 +2,17 @@ import { Divider, Stack } from "@mui/material";
 import Ram from "./Ram";
 import Dimension from "./Dimension";
 import { useState } from "react";
-import { DEFAULT_CAPACITY, DEFAULT_GRID } from "./constants";
+import {
+  DEFAULT_CAPACITY,
+  DEFAULT_GRID,
+  DEFAULT_GROWTH_FACTOR,
+} from "./constants";
 import Manipulators from "./Manipulators";
 
 function App() {
   const [grid, setGrid] = useState(DEFAULT_GRID);
   const [capacity, setCapacity] = useState(DEFAULT_CAPACITY);
+  const [growthFactor, setGrowthFactor] = useState(DEFAULT_GROWTH_FACTOR);
 
   const addOneRow = () => {
     const cloneGrid = [...grid];
@@ -54,6 +59,10 @@ function App() {
     setCapacity(e.target.value);
   };
 
+  const handleChangeGrowthFactor = (e) => {
+    setGrowthFactor(e.target.value);
+  };
+
   return (
     <Stack spacing={2} divider={<Divider />}>
       <Dimension
@@ -65,7 +74,9 @@ function App() {
       />
       <Manipulators
         capacity={capacity}
+        growthFactor={growthFactor}
         handleChangeCapacity={handleChangeCapacity}
+        handleChangeGrowthFactor={handleChangeGrowthFactor}
       />
       <Ram grid={grid} />
     </Stack>

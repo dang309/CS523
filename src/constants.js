@@ -5,3 +5,4 @@ export const DEFAULT_GRID = [
 ];
 
 export const DEFAULT_CAPACITY = 10;
+export const DEFAULT_GROWTH_FACTOR = 2;
