@@ -34,18 +34,38 @@ function App() {
     }
   };
 
+  const deleteOneRow = () => {
+    const cloneGrid = [...grid];
+
+    cloneGrid.pop();
+    setGrid([...cloneGrid]); // Make sure to use a new reference for state update
+  };
+
+  const deleteOneColumn = () => {
+    const cloneGrid = [...grid];
+
+    for (let i = 0; i < grid.length; i++) {
+      cloneGrid[i].pop();
+      setGrid([...cloneGrid]); // Make sure to use a new reference for state update
+    }
+  };
+
   const handleChangeCapacity = (e) => {
     setCapacity(e.target.value);
   };
 
   return (
     <Stack spacing={2} divider={<Divider />}>
-      <Dimension grid={grid} />
+      <Dimension
+        grid={grid}
+        addOneRow={addOneRow}
+        addOneColumn={addOneColumn}
+        deleteOneRow={deleteOneRow}
+        deleteOneColumn={deleteOneColumn}
+      />
       <Manipulators
         capacity={capacity}
         handleChangeCapacity={handleChangeCapacity}
-        addOneRow={addOneRow}
-        addOneColumn={addOneColumn}
       />
       <Ram grid={grid} />
     </Stack>
