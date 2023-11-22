@@ -3,3 +3,5 @@ export const DEFAULT_GRID = [
   [2, 3, 6],
   [0, 7, 8],
 ];
+
+export const DEFAULT_CAPACITY = 10;
