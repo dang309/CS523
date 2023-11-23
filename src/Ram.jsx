@@ -26,7 +26,7 @@ const Ram = ({ addressSpace }) => {
                 <Box
                   className={`node-${item?.rIndex}-${item?.cIndex}`}
                   sx={{
-                    backgroundColor: "#ccc",
+                    backgroundColor: "#FAF6F0",
 
                     width: "32px",
                     minWidth: "32px",

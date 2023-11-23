@@ -1,4 +1,4 @@
-import { Button, Stack, TextField } from "@mui/material";
+import { Stack, TextField } from "@mui/material";
 
 const Manipulators = ({
   capacity,
@@ -6,7 +6,6 @@ const Manipulators = ({
   handleChangeCapacity,
   handleChangeGrowthFactor,
   handleBlurCapacity,
-  renderByRow,
 }) => {
   return (
     <Stack direction="row" justifyContent="center" spacing={2}>
@@ -24,8 +23,6 @@ const Manipulators = ({
         onChange={handleChangeGrowthFactor}
         size="small"
       />
-
-      <Button onClick={renderByRow}>By Row</Button>
     </Stack>
   );
 };

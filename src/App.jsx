@@ -9,10 +9,10 @@ import {
   MAX_ADDRESS_SPACE,
 } from "./constants";
 import Manipulators from "./Manipulators";
-import { useEffect } from "react";
 import { useCallback } from "react";
 
 import randomcolor from "randomcolor";
+import { useEffect } from "react";
 
 function App() {
   const [grid, setGrid] = useState(DEFAULT_GRID);
@@ -20,8 +20,9 @@ function App() {
   const [capacity, setCapacity] = useState(DEFAULT_CAPACITY);
   const [growthFactor, setGrowthFactor] = useState(DEFAULT_GROWTH_FACTOR);
 
-  const initializeAddressSpace = useCallback(() => {
+  const initializeAddressSpaceByRowMajor = useCallback(() => {
     if (!grid || (grid && grid.length === 0)) return null;
+
     const cloneGrid = [...grid];
     for (let i = 0; i < cloneGrid.length; i++) {
       cloneGrid[i] = cloneGrid[i].concat(
@@ -40,6 +41,7 @@ function App() {
         };
       });
     });
+
     setAddressSpace(result);
   }, [grid, capacity]);
 
@@ -52,7 +54,6 @@ function App() {
         // Use Math.floor to get integer values
         cloneGrid[cloneGrid.length - 1].push(Math.floor(Math.random() * 9));
         setGrid([...cloneGrid]); // Make sure to use a new reference for state update
-        colorizeGrid();
       }, 100 * (i + 1)); // Adjust the delay based on the index to stagger updates
     }
   };
@@ -86,18 +87,15 @@ function App() {
           const els = Array.from(
             document.getElementsByClassName(`node-${i}-${j}`)
           );
+          console.log({ els });
           if (els && els.length > 0) {
             els.forEach((el) => {
               el.style.backgroundColor = color;
             });
           }
-        }, 200 * i);
+        }, 100 * i);
       }
     }
-  };
-
-  const renderByRow = () => {
-    colorizeGrid();
   };
 
   const deleteOneRow = () => {
@@ -121,7 +119,7 @@ function App() {
   };
 
   const handleBlurCapacity = () => {
-    initializeAddressSpace();
+    initializeAddressSpaceByRowMajor();
   };
 
   const handleChangeGrowthFactor = (e) => {
@@ -129,8 +127,18 @@ function App() {
   };
 
   useEffect(() => {
-    initializeAddressSpace();
-  }, [initializeAddressSpace]);
+    initializeAddressSpaceByRowMajor();
+  }, [initializeAddressSpaceByRowMajor]);
+
+  useEffect(() => {
+    if (capacity === grid[0].length) {
+      setCapacity((prev) => Math.round(prev * growthFactor));
+    }
+  }, [capacity, grid, growthFactor]);
+
+  useEffect(() => {
+    colorizeGrid();
+  }, [capacity, addressSpace]);
 
   return (
     <Stack spacing={2} divider={<Divider />}>
@@ -147,7 +155,6 @@ function App() {
         handleChangeCapacity={handleChangeCapacity}
         handleChangeGrowthFactor={handleChangeGrowthFactor}
         handleBlurCapacity={handleBlurCapacity}
-        renderByRow={renderByRow}
       />
       <Ram addressSpace={addressSpace} capacity={capacity} />
     </Stack>
