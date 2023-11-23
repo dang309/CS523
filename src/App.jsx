@@ -131,7 +131,7 @@ function App() {
   }, [initializeAddressSpaceByRowMajor]);
 
   useEffect(() => {
-    if (capacity === grid[0].length) {
+    if (capacity === grid[0].length + 1) {
       setCapacity((prev) => Math.round(prev * growthFactor));
     }
   }, [capacity, grid, growthFactor]);
